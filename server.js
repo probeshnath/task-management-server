@@ -1,8 +1,13 @@
 const express = require('express');
 require('dotenv').config()
 const app = express();
+const cors = require('cors')
 const port = process.env.PORT || 5000;
 
+
+// middleware
+app.use(express.json())
+app.use(cors())
 
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
@@ -22,6 +27,22 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     // Send a ping to confirm a successful connection
+
+    // task post request
+    const tasks = client.db("task-management").collection("tasks");
+
+    app.post("/tasks",async(req,res)=>{
+        const task = req.body;
+        // console.log(task)
+        const result = await tasks.insertOne(task)
+        res.send(result)
+    })
+
+
+
+
+
+
     // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
