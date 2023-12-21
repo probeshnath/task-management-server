@@ -28,13 +28,23 @@ async function run() {
     await client.connect();
     // Send a ping to confirm a successful connection
 
-    // task post request
+    // database
     const tasks = client.db("task-management").collection("tasks");
-
+    
+    // task post request
     app.post("/tasks",async(req,res)=>{
         const task = req.body;
         // console.log(task)
         const result = await tasks.insertOne(task)
+        res.send(result)
+    })
+
+    // get tasks
+    app.get("/tasks/:email",async(req,res)=>{
+        const email = req.params.email ;
+        const userEmail = {email: email}
+        const result = await tasks.find(userEmail).toArray();
+        console.log(result)
         res.send(result)
     })
 
