@@ -10,7 +10,7 @@ app.use(express.json())
 app.use(cors())
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = process.env.MONGODB_URL;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -46,6 +46,15 @@ async function run() {
         const result = await tasks.find(userEmail).toArray();
         console.log(result)
         res.send(result)
+    })
+
+    // delete
+    app.delete("/tasks/:id", async(req,res) =>{
+      const id = req.params.id
+      const query = { _id: new ObjectId(id)}
+      // console.log(id)
+      const result = await tasks.deleteOne(query);
+      res.send(result)
     })
 
 
